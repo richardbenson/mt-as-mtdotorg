@@ -1,0 +1,59 @@
+name: Action Stream: MT.org
+id: MTOrgAS
+key: MTOrgAS
+author_link: http://www.richardbenson.co.uk
+author_name: Richard Benson
+description: Display your activity on MT.org.
+version: 0.1
+plugin_link: http://www.richardbenson.co.uk/projects/
+
+profile_services:
+    mtdotorg:
+        name: MT.org
+        url: http://www.movabletype.org/members/{{ident}}
+        ident_example: http://www.movabletype.org/members/xxxxxxx
+        icon: mt_logo.png
+
+action_streams:
+    mtdotorg:
+        activity:
+            name: Your Activity
+            description: Threads started and replies made
+            url: http://www.movabletype.org/members/{{ident}}
+            identifier: url,title
+            html_form: '[_1] <a href="[_2]">[_3]</a> on MT.org'
+            html_params:
+                - url
+                - title
+            scraper:
+                foreach: 'ul.recent-actions li'
+                get:
+                    url:
+                      - a
+                      - @href
+                    title:
+                      - li
+                      - TEXT
+        postedplugins:
+            name: Your Plugins
+            description: Plugins you have posted
+            url: http://www.movabletype.org/members/{{ident}}
+            identifier: url
+            html_form: '[_1] added <a href="[_2]">[_3]</a> to the MT.org plugin directory'
+            fields:
+                - description
+            html_params:
+                - url
+                - title
+            scraper:
+                foreach: 'div#plugins div.comment'
+                get:
+                    url:
+                      - a
+                      - '@href'
+                    title:
+                      - a
+                      - TEXT
+                    description:
+                      - p.plugin-excerpt
+                      - TEXT
